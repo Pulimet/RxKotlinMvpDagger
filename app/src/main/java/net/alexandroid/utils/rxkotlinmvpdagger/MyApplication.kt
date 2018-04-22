@@ -1,6 +1,7 @@
 package net.alexandroid.utils.rxkotlinmvpdagger
 
 import android.app.Application
+import net.alexandroid.utils.mylog.MyLog
 import net.alexandroid.utils.rxkotlinmvpdagger.dagger.ContextModule
 import net.alexandroid.utils.rxkotlinmvpdagger.dagger.DaggerMyApplicationComponent
 import net.alexandroid.utils.rxkotlinmvpdagger.dagger.MyApplicationComponent
@@ -13,6 +14,9 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        MyLog.init(this)
+        MyLog.setTag("ZAQ")
 
         component = DaggerMyApplicationComponent
                 .builder()

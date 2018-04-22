@@ -1,4 +1,4 @@
-package net.alexandroid.utils.rxkotlinmvpdagger
+package net.alexandroid.utils.rxkotlinmvpdagger.ui.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,15 +10,20 @@ import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.exceptions.OnErrorNotImplementedException
 import kotlinx.android.synthetic.main.activity_main.*
+import net.alexandroid.utils.rxkotlinmvpdagger.MyApplication
+import net.alexandroid.utils.rxkotlinmvpdagger.R
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
+
+    private var mPresenter: MainMvp.PresenterOps? = null
 
     @Inject
-    lateinit var picasso:Picasso
+    lateinit var picasso: Picasso
 
     private val disposables = CompositeDisposable()
 
@@ -28,12 +33,28 @@ class MainActivity : AppCompatActivity() {
 
         MyApplication.component.inject(this)
 
+        attachPresenter()
+
         picasso.load(R.mipmap.ic_launcher).into(imageView)
 
         setSearchListener()
     }
 
+    private fun attachPresenter() {
+        mPresenter = lastCustomNonConfigurationInstance as? MainMvp.PresenterOps
+        if (mPresenter == null) {
+            mPresenter = MainPresenter()
+        }
+        mPresenter?.attachView(this)
+    }
+
+    override fun onRetainCustomNonConfigurationInstance(): MainMvp.PresenterOps? {
+        return mPresenter
+    }
+
+
     override fun onDestroy() {
+        mPresenter?.onDestroy()
         super.onDestroy()
         disposables.clear()
     }
@@ -49,13 +70,12 @@ class MainActivity : AppCompatActivity() {
                     })
                 }).debounce(1000, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ text ->
-                            textView.text = text
-                            onNewSearchQuery()
-                        }))
+                        .subscribe(
+                                { text ->
+                                    textView.text = text
+                                    mPresenter?.onNewSearchQuery(text)
+                                },
+                                { t -> throw OnErrorNotImplementedException(t) }))
     }
 
-    private fun onNewSearchQuery() {
-
-    }
 }
