@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
     lateinit var mPresenter: MainMvp.PresenterOps
     @Inject
     lateinit var picasso: Picasso
+    @Inject
+    lateinit var photoRetriever: PhotoRetriever
 
     private val disposables = CompositeDisposable()
 
@@ -44,14 +46,14 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
 
         setSearchListener()
 
-        PhotoRetriever().getPhotosObservable()
+        photoRetriever.getPhotosObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list: PhotoList? ->
-                    MyLog.d("Size: " + list?.photos?.size)
-                    MyLog.d("Result: " + list?.photos?.get(0)?.webformatURL)
-                    MyLog.d("Result: " + list?.photos?.get(1)?.webformatURL)
-                    MyLog.d("Result: " + list?.photos?.get(2)?.webformatURL)
+                    MyLog.d("Size: " + list?.hits?.size)
+                    MyLog.d("Result: " + list?.hits?.get(0)?.webformatURL)
+                    MyLog.d("Result: " + list?.hits?.get(1)?.webformatURL)
+                    MyLog.d("Result: " + list?.hits?.get(2)?.webformatURL)
                 })
 
     }
@@ -85,7 +87,7 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
                         .subscribe(
                                 { text ->
                                     textView.text = text
-                                    mPresenter?.onNewSearchQuery(text)
+                                    mPresenter.onNewSearchQuery(text)
                                 },
                                 { t -> throw OnErrorNotImplementedException(t) }))
     }

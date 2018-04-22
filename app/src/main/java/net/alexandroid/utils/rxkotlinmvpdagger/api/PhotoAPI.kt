@@ -2,6 +2,7 @@ package net.alexandroid.utils.rxkotlinmvpdagger.api
 
 import io.reactivex.Observable
 import net.alexandroid.utils.rxkotlinmvpdagger.model.PhotoList
+import retrofit2.Call
 import retrofit2.http.GET
 
 interface PhotoAPI {

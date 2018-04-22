@@ -1,4 +1,4 @@
 package net.alexandroid.utils.rxkotlinmvpdagger.model
 
-data class PhotoList(val photos : List<Photo>) {
+data class PhotoList(val hits : List<Photo>) {
 }

@@ -2,6 +2,7 @@ package net.alexandroid.utils.rxkotlinmvpdagger.api
 
 import io.reactivex.Observable
 import net.alexandroid.utils.rxkotlinmvpdagger.model.PhotoList
+import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
