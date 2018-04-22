@@ -1,28 +1,28 @@
 package net.alexandroid.utils.rxkotlinmvpdagger.ui.main
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.exceptions.OnErrorNotImplementedException
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import net.alexandroid.utils.mylog.MyLog
 import net.alexandroid.utils.rxkotlinmvpdagger.MyApplication
 import net.alexandroid.utils.rxkotlinmvpdagger.R
 import net.alexandroid.utils.rxkotlinmvpdagger.api.PhotoRetriever
-import net.alexandroid.utils.rxkotlinmvpdagger.model.PhotoList
+import net.alexandroid.utils.rxkotlinmvpdagger.model.Photo
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
+class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps, View.OnClickListener {
 
     @Inject
     lateinit var mPresenter: MainMvp.PresenterOps
@@ -31,39 +31,20 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
     @Inject
     lateinit var photoRetriever: PhotoRetriever
 
+    var mainAdapter: MainAdapter? = null
+
     private val disposables = CompositeDisposable()
 
-    @SuppressLint("CheckResult")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
         MyApplication.component.inject(this)
-
-        attachPresenter()
-
-        picasso.load(R.mipmap.ic_launcher).into(imageView)
-
-        setSearchListener()
-
-        photoRetriever.getPhotosObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list: PhotoList? ->
-                    MyLog.d("Size: " + list?.hits?.size)
-                    MyLog.d("Result: " + list?.hits?.get(0)?.webformatURL)
-                    MyLog.d("Result: " + list?.hits?.get(1)?.webformatURL)
-                    MyLog.d("Result: " + list?.hits?.get(2)?.webformatURL)
-                })
-
-    }
-
-    private fun attachPresenter() {
         mPresenter.attachView(this)
-    }
-
-    override fun onRetainCustomNonConfigurationInstance(): MainMvp.PresenterOps? {
-        return mPresenter
+        setSearchListener()
     }
 
 
@@ -73,7 +54,7 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
         disposables.clear()
     }
 
-    @SuppressLint("CheckResult")
+
     private fun setSearchListener() {
         disposables.add(
                 Observable.create(ObservableOnSubscribe<String> { subscriber ->
@@ -87,9 +68,24 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
                         .subscribe(
                                 { text ->
                                     textView.text = text
-                                    mPresenter.onNewSearchQuery(text)
+                                    mPresenter.onNewSearchQuery(text, photoRetriever)
                                 },
                                 { t -> throw OnErrorNotImplementedException(t) }))
     }
 
+
+    //MainMvp.RequiredViewOps
+    override fun updateResultsList(photosList: List<Photo>) {
+        MyLog.d("")
+        mainAdapter = MainAdapter(photosList, this@MainActivity, picasso)
+        recyclerView.adapter = mainAdapter
+    }
+
+    //View.OnClickListener
+    override fun onClick(v: View?) {
+//        val intent = Intent(this, DetailActivity::class.java)
+//        val holder = v?.tag as MainAdapter.PhotoViewHolder
+//        intent.putExtra(DetailActivity.PHOTO, mainAdapter?.getPhoto(holder.adapterPosition))
+//        startActivity(intent)
+    }
 }

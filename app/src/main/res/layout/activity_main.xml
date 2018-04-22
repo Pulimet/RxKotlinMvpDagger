@@ -32,13 +32,13 @@
         app:layout_constraintTop_toBottomOf="@id/editText"
         tools:text="Hello World!"/>
 
-    <ImageView
-        android:id="@+id/imageView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView"
-        tools:ignore="ContentDescription"/>
+        app:layout_constraintTop_toBottomOf="@id/textView"/>
 
 </android.support.constraint.ConstraintLayout>

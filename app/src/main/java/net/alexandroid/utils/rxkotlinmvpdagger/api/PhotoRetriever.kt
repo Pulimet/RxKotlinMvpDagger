@@ -19,7 +19,7 @@ class PhotoRetriever {
         service = retrofit.create(PhotoAPI::class.java)
     }
 
-    fun getPhotosObservable(): Observable<PhotoList> {
-        return service.getPhotos()
+    fun getPhotosObservable(text: String): Observable<PhotoList> {
+        return service.getPhotos(text)
     }
 }

@@ -1,11 +1,16 @@
 package net.alexandroid.utils.rxkotlinmvpdagger.ui.main
 
+import net.alexandroid.utils.rxkotlinmvpdagger.api.PhotoRetriever
+import net.alexandroid.utils.rxkotlinmvpdagger.model.Photo
+
 interface MainMvp {
     /**
      * View mandatory methods. Available to Presenter
      * Presenter -> View
      */
-    interface RequiredViewOps
+    interface RequiredViewOps {
+        fun updateResultsList(photosList: List<Photo>)
+    }
 
     /**
      * Operations offered from Presenter to View
@@ -16,7 +21,7 @@ interface MainMvp {
 
         fun attachView(view: RequiredViewOps)
 
-        fun onNewSearchQuery(text: String?)
+        fun onNewSearchQuery(text: String?, photoRetriever: PhotoRetriever)
     }
 
     /**

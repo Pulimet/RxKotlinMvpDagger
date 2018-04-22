@@ -1,6 +1,11 @@
 package net.alexandroid.utils.rxkotlinmvpdagger.ui.main
 
+import android.annotation.SuppressLint
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import net.alexandroid.utils.mylog.MyLog
+import net.alexandroid.utils.rxkotlinmvpdagger.api.PhotoRetriever
+import net.alexandroid.utils.rxkotlinmvpdagger.model.PhotoList
 import java.lang.ref.WeakReference
 
 class MainPresenter : MainMvp.RequiredPresenterOps, MainMvp.PresenterOps {
@@ -24,7 +29,21 @@ class MainPresenter : MainMvp.RequiredPresenterOps, MainMvp.PresenterOps {
         mModel.onDestroy()
     }
 
-    override fun onNewSearchQuery(text: String?) {
+    @SuppressLint("CheckResult")
+    override fun onNewSearchQuery(text: String?, photoRetriever: PhotoRetriever) {
         MyLog.d("New query: $text")
+        if (text == null || text.length < 3) {
+            return
+        }
+        photoRetriever.getPhotosObservable(text)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list: PhotoList? ->
+                    MyLog.d("Size: " + list?.hits?.size)
+                    if (list?.hits?.size != null) {
+                        mView?.get()?.updateResultsList(list.hits)
+                    }
+                })
+
     }
 }
