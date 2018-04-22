@@ -29,6 +29,5 @@ class MainActivity : AppCompatActivity() {
                 .subscribe({ text ->
                     textView.text = text
                 })
-
     }
 }
