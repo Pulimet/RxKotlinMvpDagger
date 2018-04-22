@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
 
-    private var mPresenter: MainMvp.PresenterOps? = null
-
+    @Inject
+    lateinit var mPresenter: MainMvp.PresenterOps
     @Inject
     lateinit var picasso: Picasso
 
@@ -41,11 +41,7 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
     }
 
     private fun attachPresenter() {
-        mPresenter = lastCustomNonConfigurationInstance as? MainMvp.PresenterOps
-        if (mPresenter == null) {
-            mPresenter = MainPresenter()
-        }
-        mPresenter?.attachView(this)
+        mPresenter.attachView(this)
     }
 
     override fun onRetainCustomNonConfigurationInstance(): MainMvp.PresenterOps? {
@@ -54,7 +50,7 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
 
 
     override fun onDestroy() {
-        mPresenter?.onDestroy()
+        mPresenter.onDestroy()
         super.onDestroy()
         disposables.clear()
     }

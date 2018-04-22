@@ -12,6 +12,7 @@ class MainPresenter : MainMvp.RequiredPresenterOps, MainMvp.PresenterOps {
     private val mModel: MainMvp.ModelOps
 
     init {
+        MyLog.d("Init MainPresenter")
         this.mModel = MainModel(this)
     }
 
