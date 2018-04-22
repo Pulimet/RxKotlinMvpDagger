@@ -11,9 +11,13 @@ import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.exceptions.OnErrorNotImplementedException
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import net.alexandroid.utils.mylog.MyLog
 import net.alexandroid.utils.rxkotlinmvpdagger.MyApplication
 import net.alexandroid.utils.rxkotlinmvpdagger.R
+import net.alexandroid.utils.rxkotlinmvpdagger.api.PhotoRetriever
+import net.alexandroid.utils.rxkotlinmvpdagger.model.PhotoList
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -27,6 +31,7 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
 
     private val disposables = CompositeDisposable()
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,6 +43,17 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps {
         picasso.load(R.mipmap.ic_launcher).into(imageView)
 
         setSearchListener()
+
+        PhotoRetriever().getPhotosObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list: PhotoList? ->
+                    MyLog.d("Size: " + list?.photos?.size)
+                    MyLog.d("Result: " + list?.photos?.get(0)?.webformatURL)
+                    MyLog.d("Result: " + list?.photos?.get(1)?.webformatURL)
+                    MyLog.d("Result: " + list?.photos?.get(2)?.webformatURL)
+                })
+
     }
 
     private fun attachPresenter() {
