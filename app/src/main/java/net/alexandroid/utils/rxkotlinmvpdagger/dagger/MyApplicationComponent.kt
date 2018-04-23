@@ -6,7 +6,7 @@ import net.alexandroid.utils.rxkotlinmvpdagger.dagger.main.MainModule
 import net.alexandroid.utils.rxkotlinmvpdagger.ui.main.MainActivity
 
 @MyApplicationScope
-@Component(modules = [PicassoModule::class, MainModule::class, PhotosApiModule::class])
+@Component(modules = [MainModule::class, PhotosApiModule::class])
 interface MyApplicationComponent {
     fun inject(myApplication: MyApplication)
 

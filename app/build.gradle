@@ -37,7 +37,7 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Support Libs
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
@@ -53,15 +53,21 @@ dependencies {
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion" // if you use the support libraries
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    // if you use the support libraries
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    // Other
+    // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+
+    // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
     // AlexAndroid
     implementation 'net.alexandroid.utils:mylog:1.1'

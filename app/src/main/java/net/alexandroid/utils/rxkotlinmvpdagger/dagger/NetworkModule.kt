@@ -6,11 +6,8 @@ import dagger.Provides
 import net.alexandroid.utils.mylog.MyLog
 import okhttp3.Cache
 import okhttp3.OkHttpClient
-import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
-import java.util.*
-import java.util.Arrays.asList
 
 
 @Module(includes = [(ContextModule::class)])

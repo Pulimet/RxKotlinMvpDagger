@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
 import net.alexandroid.utils.mylog.MyLog
 import net.alexandroid.utils.rxkotlinmvpdagger.R
 import net.alexandroid.utils.rxkotlinmvpdagger.model.Photo
 
-class MainAdapter(var photos: List<Photo>, var clickListener: View.OnClickListener, var picasso: Picasso) :
+class MainAdapter(var photos: List<Photo>, var clickListener: View.OnClickListener) :
         RecyclerView.Adapter<MainAdapter.PhotoViewHolder>() {
 
 
@@ -32,9 +32,8 @@ class MainAdapter(var photos: List<Photo>, var clickListener: View.OnClickListen
         holder.favorites.text = photo.favorites.toString()
 
         MyLog.d("Url: " + photo.previewURL)
-        picasso.load(photo.previewURL)
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher_round)
+        Glide.with(holder.itemView.context)
+                .load(photo.previewURL)
                 .into(holder.photo_item)
     }
 

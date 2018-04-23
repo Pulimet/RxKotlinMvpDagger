@@ -1,5 +1,6 @@
 package net.alexandroid.utils.rxkotlinmvpdagger.ui.main
 
+import io.reactivex.Observable
 import net.alexandroid.utils.rxkotlinmvpdagger.api.PhotoRetriever
 import net.alexandroid.utils.rxkotlinmvpdagger.model.Photo
 
@@ -10,6 +11,9 @@ interface MainMvp {
      */
     interface RequiredViewOps {
         fun updateResultsList(photosList: List<Photo>)
+        fun setSearchText(text: String)
+        fun getPhotoRetriever2(): PhotoRetriever
+        fun startDetailActivity(photo: Photo)
     }
 
     /**
@@ -21,7 +25,9 @@ interface MainMvp {
 
         fun attachView(view: RequiredViewOps)
 
-        fun onNewSearchQuery(text: String?, photoRetriever: PhotoRetriever)
+        fun searchObservableReady(searchObservable: Observable<String>)
+
+        fun onImageClick(it: Photo)
     }
 
     /**

@@ -2,17 +2,18 @@ package net.alexandroid.utils.rxkotlinmvpdagger.api
 
 import io.reactivex.Observable
 import net.alexandroid.utils.rxkotlinmvpdagger.model.PhotoList
-import retrofit2.Callback
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class PhotoRetriever {
+class PhotoRetriever(okHttpClient: OkHttpClient) {
     private val service: PhotoAPI
 
     init {
         val retrofit = Retrofit.Builder()
                 .baseUrl("http://pixabay.com/api/")
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
