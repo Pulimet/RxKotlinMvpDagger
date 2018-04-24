@@ -54,6 +54,7 @@ class MainPresenter : MainMvp.RequiredPresenterOps, MainMvp.PresenterOps {
         if (text == null || text.length < 3 || photoRetriever == null) {
             return
         }
+        mView?.get()?.setProgressBarVisible(true)
 
         disposables.add(
                 photoRetriever.getPhotosObservable(text)
@@ -61,6 +62,7 @@ class MainPresenter : MainMvp.RequiredPresenterOps, MainMvp.PresenterOps {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ list: PhotoList? ->
                             MyLog.d("Size: " + list?.hits?.size)
+                            mView?.get()?.setProgressBarVisible(false)
                             if (list?.hits?.size != null) {
                                 mView?.get()?.updateResultsList(list.hits)
                             }

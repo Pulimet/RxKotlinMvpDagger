@@ -14,6 +14,7 @@ interface MainMvp {
         fun setSearchText(text: String)
         fun getPhotoRetriever2(): PhotoRetriever
         fun startDetailActivity(photo: Photo)
+        fun setProgressBarVisible(visible: Boolean)
     }
 
     /**

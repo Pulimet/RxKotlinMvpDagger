@@ -78,6 +78,10 @@ class MainActivity : AppCompatActivity(), MainMvp.RequiredViewOps, View.OnClickL
         DetailActivity.startDetailActivity(this, photo)
     }
 
+    override fun setProgressBarVisible(visible: Boolean) {
+        progressBar.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
     //View.OnClickListener
     override fun onClick(v: View?) {
         val holder = v?.tag as MainAdapter.PhotoViewHolder
