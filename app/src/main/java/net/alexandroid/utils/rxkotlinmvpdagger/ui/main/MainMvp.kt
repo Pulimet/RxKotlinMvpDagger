@@ -3,6 +3,7 @@ package net.alexandroid.utils.rxkotlinmvpdagger.ui.main
 import io.reactivex.Observable
 import net.alexandroid.utils.rxkotlinmvpdagger.api.PhotoRetriever
 import net.alexandroid.utils.rxkotlinmvpdagger.model.Photo
+import net.alexandroid.utils.rxkotlinmvpdagger.model.PhotoList
 
 interface MainMvp {
     /**
@@ -35,13 +36,16 @@ interface MainMvp {
      * Operations offered from Presenter to Model
      * Model -> Presenter
      */
-    interface RequiredPresenterOps
+    interface RequiredPresenterOps {
+        fun onPhotosReceived(list: PhotoList?)
+    }
 
     /**
      * Model operations offered to Presenter
      * Presenter -> Model
      */
     interface ModelOps {
+        fun getPhotosByQuery(text: String, photoRetriever: PhotoRetriever)
         fun onDestroy()
     }
 

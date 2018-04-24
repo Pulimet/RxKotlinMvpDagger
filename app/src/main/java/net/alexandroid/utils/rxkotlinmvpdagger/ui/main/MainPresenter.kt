@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.exceptions.OnErrorNotImplementedException
-import io.reactivex.schedulers.Schedulers
 import net.alexandroid.utils.mylog.MyLog
 import net.alexandroid.utils.rxkotlinmvpdagger.api.PhotoRetriever
 import net.alexandroid.utils.rxkotlinmvpdagger.model.Photo
@@ -27,6 +26,8 @@ class MainPresenter : MainMvp.RequiredPresenterOps, MainMvp.PresenterOps {
         this.mModel = MainModel(this)
     }
 
+
+    //  MainMvp.PresenterOps
     override fun attachView(view: MainMvp.RequiredViewOps) {
         this.mView = WeakReference(view)
     }
@@ -48,6 +49,11 @@ class MainPresenter : MainMvp.RequiredPresenterOps, MainMvp.PresenterOps {
                                 { t -> throw OnErrorNotImplementedException(t) }))
     }
 
+    override fun onImageClick(photo: Photo) {
+        mView?.get()?.startDetailActivity(photo)
+    }
+
+
     private fun onNewSearchQuery(text: String?) {
         MyLog.d("New query: $text")
         val photoRetriever: PhotoRetriever? = mView?.get()?.getPhotoRetriever2()
@@ -55,22 +61,15 @@ class MainPresenter : MainMvp.RequiredPresenterOps, MainMvp.PresenterOps {
             return
         }
         mView?.get()?.setProgressBarVisible(true)
-
-        disposables.add(
-                photoRetriever.getPhotosObservable(text)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ list: PhotoList? ->
-                            MyLog.d("Size: " + list?.hits?.size)
-                            mView?.get()?.setProgressBarVisible(false)
-                            if (list?.hits?.size != null) {
-                                mView?.get()?.updateResultsList(list.hits)
-                            }
-                        }))
-
+        mModel.getPhotosByQuery(text, photoRetriever)
     }
 
-    override fun onImageClick(photo: Photo) {
-        mView?.get()?.startDetailActivity(photo)
+
+    //  MainMvp.RequiredPresenterOps
+    override fun onPhotosReceived(list: PhotoList?) {
+        mView?.get()?.setProgressBarVisible(false)
+        if (list?.hits?.size != null) {
+            mView?.get()?.updateResultsList(list.hits)
+        }
     }
 }
