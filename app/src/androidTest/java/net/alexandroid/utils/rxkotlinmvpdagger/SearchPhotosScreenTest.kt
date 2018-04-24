@@ -3,8 +3,7 @@ package net.alexandroid.utils.rxkotlinmvpdagger
 import android.content.pm.ActivityInfo
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.replaceText
-import android.support.test.espresso.action.ViewActions.typeText
+import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions
 import android.support.test.espresso.matcher.ViewMatchers.*
@@ -49,10 +48,22 @@ class SearchPhotosScreenTest {
         onView(withId(R.id.editText)).perform(typeText("tomato"))
         Espresso.closeSoftKeyboard()
         Thread.sleep(2000)
-        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.scrollToPosition<MainAdapter.PhotoViewHolder>(19))
+        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions
+                .scrollToPosition<MainAdapter.PhotoViewHolder>(19))
         Thread.sleep(500)
         onView(withId(R.id.recyclerView)).check(matches(atPosition(19, hasDescendant(isDisplayed()))))
 
+    }
+
+    @Test
+    fun testClickOnItem() {
+        onView(withId(R.id.editText)).perform(typeText("apple"))
+        Espresso.closeSoftKeyboard()
+        Thread.sleep(2000)
+        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions
+                .actionOnItemAtPosition<MainAdapter.PhotoViewHolder>(2, click()))
+        Thread.sleep(1000)
+        onView(withId(R.id.imageView)).check(matches(isDisplayed()))
     }
 
     @Test
